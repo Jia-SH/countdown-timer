@@ -101,13 +101,13 @@ namespace countdowntimer
 		{
 			// timer.WorkerReportsProgress = true;
 			// timer.ProgressChanged += timer_ProgressChanged;
-			Name = countdown.name;
-			totaltime = countdown.totaltime;
+			Name = countdown.Name;
+			totaltime = countdown.Totaltime;
 			Currenttime = totaltime;
 			Currentstate = TimerState.未开始;
 			Btnnamestart = "开始";
 			IsEnabledPause = false;
-			TextBackgroundColor = Brushes.Blue;
+			TextBackgroundColor = Brushes.Transparent;
 
             timer = new BackgroundWorker
             {

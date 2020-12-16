@@ -6,17 +6,23 @@
         xmlns:local="clr-namespace:倒计时"
         mc:Ignorable="d"
         Title="倒计时" Height="450" Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCommnad_Executed" CanExecute="OpenCommnad_CanExecute" />
+        <CommandBinding Command="ApplicationCommands.Save" Executed="SaveCommnad_Executed" CanExecute="SaveCommnad_CanExecute" />
+        <CommandBinding Command="ApplicationCommands.SaveAs" Executed="SaveAsCommnad_Executed" CanExecute="SaveAsCommnad_CanExecute" />
+        <CommandBinding Command="ApplicationCommands.Close" Executed="CloseCommnad_Executed" CanExecute="CloseCommnad_CanExecute" />
+    </Window.CommandBindings>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="文件(_File)">
                     <!--菜单项为MenuItem，文字使用属性 Header-->
-                    <MenuItem Header="打开 (_Open)" ></MenuItem>
-                    <MenuItem Header="保存 (_Save)"></MenuItem>
-                    <MenuItem Header="另存为 (Save_As)"></MenuItem>
-                    <MenuItem Header="退出 (_Exit)"></MenuItem>
+                    <MenuItem Header="打开 (_Open)" Command="Open"></MenuItem>
+                    <MenuItem Header="保存 (_Save)" Command="Save"></MenuItem>
+                    <MenuItem Header="另存为 (Save_As)" Command="SaveAs"></MenuItem>
+                    <MenuItem Header="退出 (_Exit)" Command="Close"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="关于(_About)"></MenuItem>
+                <MenuItem Header="关于(_About)" Name="BtnAbout" Click="BtnAbout_Click"></MenuItem>
             </Menu>
             <TextBlock DockPanel.Dock="Top" Style="{StaticResource TextTitle}" Text="倒计时列表">
             </TextBlock>
@@ -29,8 +35,8 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="名称" Width="300" DisplayMemberBinding="{Binding name}"></GridViewColumn>
-                        <GridViewColumn Header="时长" Width="220" DisplayMemberBinding="{Binding totaltime}"></GridViewColumn>
+                        <GridViewColumn Header="名称" Width="300" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
+                        <GridViewColumn Header="时长" Width="220" DisplayMemberBinding="{Binding Totaltime}"></GridViewColumn>
                         <GridViewColumn Header="操作" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

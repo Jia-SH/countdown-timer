@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Serialization;
 using countdown;
+using Microsoft.Win32;
 
 namespace 倒计时
 {
@@ -24,19 +20,42 @@ namespace 倒计时
         public MainWindow()
         {
             InitializeComponent();
-            AddContent();
+
+            string filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".countdown.json");
+            if (File.Exists(filename))
+            {
+                LoadSettings(filename); //从文件加载
+            }
+            else
+            {
+                AddContent(); //直接写入
+            }
+        }
+
+        public void LoadSettings(string filename)
+        {
+            string str = File.ReadAllText(filename);
+            var cds = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Countdown>>(str);
+            lv_countdown.ItemsSource = cds;
+        }
+
+        public void SaveSettings(string filename, List<Countdown> cds)
+        {
+            var str = Newtonsoft.Json.JsonConvert.SerializeObject(cds);
+            File.WriteAllText(filename, str);
         }
 
         public void AddContent()
         {
-            var users = new List<Countdown>
+            var cds = new List<Countdown>
             {
-                new Countdown() { name = "PPT-10秒钟", totaltime = new TimeSpan(0, 0, 10) },
-                new Countdown() { name = "PPT-1分钟", totaltime = new TimeSpan(0, 1, 00) },
-                new Countdown() { name = "PPT-10分钟", totaltime = new TimeSpan(0, 10, 0) },
-                new Countdown() { name = "PPT-1 小时", totaltime = new TimeSpan(1, 0, 0) }
+                new Countdown() { Name = "PPT-10秒钟", Totaltime = new TimeSpan(0, 0, 10) },
+                new Countdown() { Name = "PPT-1分钟", Totaltime = new TimeSpan(0, 1, 00) },
+                new Countdown() { Name = "PPT-10分钟", Totaltime = new TimeSpan(0, 10, 0) },
+                new Countdown() { Name = "PPT-1 小时", Totaltime = new TimeSpan(1, 0, 0) }
             };
-            lv_countdown.ItemsSource = users;
+            lv_countdown.ItemsSource = cds;
+            // SaveSettings(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".countdown.json"),cds);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -56,6 +75,57 @@ namespace 倒计时
             var gridviewrow = (GridViewRowPresenter)VisualTreeHelper.GetParent(contentcontrol);
 
             return gridviewrow.Content as Countdown;
+        }
+
+        private void OpenCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
+            };
+            if (openFileDialog.ShowDialog()==true)
+            {
+                MessageBox.Show(openFileDialog.FileName);
+            }
+        }
+
+        private void OpenCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SaveCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("The New command was invoked");
+        }
+
+        private void SaveCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        private void SaveAsCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("The New command was invoked");
+        }
+
+        private void SaveAsCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CloseCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void CloseCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void BtnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("欢迎联系作者：745566143@qq.com","关于");
         }
     }
 }
