@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +19,7 @@ namespace 倒计时
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<Countdown> cds;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,11 +38,11 @@ namespace 倒计时
         public void LoadSettings(string filename)
         {
             string str = File.ReadAllText(filename);
-            var cds = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Countdown>>(str);
+            cds = Newtonsoft.Json.JsonConvert.DeserializeObject<ObservableCollection<Countdown>>(str);
             lv_countdown.ItemsSource = cds;
         }
 
-        public void SaveSettings(string filename, List<Countdown> cds)
+        public void SaveSettings(string filename, ObservableCollection<Countdown> cds)
         {
             var str = Newtonsoft.Json.JsonConvert.SerializeObject(cds);
             File.WriteAllText(filename, str);
@@ -47,7 +50,7 @@ namespace 倒计时
 
         public void AddContent()
         {
-            var cds = new List<Countdown>
+            cds = new ObservableCollection<Countdown>
             {
                 new Countdown() { Name = "PPT-10秒钟", Totaltime = new TimeSpan(0, 0, 10) },
                 new Countdown() { Name = "PPT-1分钟", Totaltime = new TimeSpan(0, 1, 00) },
@@ -55,10 +58,18 @@ namespace 倒计时
                 new Countdown() { Name = "PPT-1 小时", Totaltime = new TimeSpan(1, 0, 0) }
             };
             lv_countdown.ItemsSource = cds;
-            // SaveSettings(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".countdown.json"),cds);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BtnAddClick(object sender, RoutedEventArgs e)
+        {
+            Window_AddCountdown win = new Window_AddCountdown();
+            if (win.ShowDialog() == true)
+            { 
+                cds.Add(win.Cd);
+            }
+        }
+
+        private void BtnStartClick(object sender, RoutedEventArgs e)
         {
             var countdown = GetCountdown((Button)sender);
             Window1 win = new Window1(countdown);
@@ -66,6 +77,12 @@ namespace 倒计时
             this.WindowState = WindowState.Minimized;
             // this.Visibility = Visibility.Collapsed;
             // MessageBox.Show(countdown.totletime.ToString(), countdown.name);
+        }
+
+        private void BtnDeleteClick(object sender, RoutedEventArgs e)
+        {
+            var countdown = GetCountdown((Button)sender);
+            cds.Remove(countdown);
         }
 
         private Countdown GetCountdown(Button bt1)
@@ -81,11 +98,11 @@ namespace 倒计时
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
             };
             if (openFileDialog.ShowDialog()==true)
             {
-                MessageBox.Show(openFileDialog.FileName);
+                LoadSettings(openFileDialog.FileName);
             }
         }
 
@@ -96,7 +113,13 @@ namespace 倒计时
 
         private void SaveCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("The New command was invoked");
+            if (cds.Count() <= 0)
+            {
+                MessageBox.Show("请添加倒计时后再次保存！");
+                return;
+            }
+            SaveSettings(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".countdown.json"),cds);
+            MessageBox.Show("已经保存到~/.countdown.json文件中");
         }
 
         private void SaveCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -105,7 +128,19 @@ namespace 倒计时
         }
         private void SaveAsCommnad_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("The New command was invoked");
+            if (cds.Count() <= 0)
+            {
+                MessageBox.Show("请添加倒计时后再次保存！");
+                return;
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                SaveSettings(saveFileDialog.FileName, cds);
+            }
         }
 
         private void SaveAsCommnad_CanExecute(object sender, CanExecuteRoutedEventArgs e)

@@ -1,0 +1,32 @@
+﻿<Window x:Class="倒计时.Window_AddCountdown"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:倒计时" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="Window_AddCountdown" Height="300" Width="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TextTitle}"> 添加倒计时</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource TextTimeTitle}" >名称：</TextBlock>
+        <TextBox x:Name="title" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxTimeTitle}" Text="{Binding Name}"></TextBox>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource TextTimeTitle}" >时长：</TextBlock>
+        <xctk:TimeSpanUpDown x:Name="timetick" Grid.Row="2" Grid.Column="1" Style="{StaticResource TimeSpanInput}" AllowSpin="True" AllowTextInput="True" DisplayDefaultValueOnEmptyText="True" DefaultValue="{Binding Totaltime}" Minimum="0:00:00" MouseWheelActiveTrigger="FocusedMouseOver" UpdateValueOnEnterKey="True" ValueChanged="Timetick_ValueChanged"/>
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+            <Button x:Name="BtnAdd" Style="{StaticResource ButtonAddCancel}" Content="添加" Click="BtnAdd_Click" IsDefault="True" />
+            <Button x:Name="BtnCancel" Style="{StaticResource ButtonAddCancel}"  Content="取消" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

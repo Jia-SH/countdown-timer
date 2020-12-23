@@ -26,6 +26,14 @@
             </Menu>
             <TextBlock DockPanel.Dock="Top" Style="{StaticResource TextTitle}" Text="倒计时列表">
             </TextBlock>
+            <StackPanel DockPanel.Dock="Top">
+                <Button Click="BtnAddClick" Style="{StaticResource ButtonaAddCountdown}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Resources/add.png" Width="15" Height="15"></Image>
+                        <TextBlock>添加</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <ListView Margin="10" x:Name="lv_countdown">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -41,8 +49,17 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Click="Button_Click">
-                                            开始
+                                        <Button Click="BtnStartClick" Style="{StaticResource ButtonOperation}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="/Resources/start.png" Width="15" Height="15"></Image>
+                                                <TextBlock> 开始 </TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Click="BtnDeleteClick" Style="{StaticResource ButtonOperation}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="/Resources/delete.png" Width="15" Height="15"></Image>
+                                                <TextBlock> 删除 </TextBlock>
+                                            </StackPanel>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
